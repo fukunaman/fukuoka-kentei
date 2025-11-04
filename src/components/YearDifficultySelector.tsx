@@ -21,7 +21,7 @@ const YearDifficultySelector: React.FC<YearDifficultySelectorProps> = ({
   return (
     <main className="year-difficulty-selector" role="main">
       <header>
-        <h1>福岡検定オンラインテスト</h1>
+        <h1>福岡検定過去問テスト</h1>
       </header>
       
       <div className="selection-container">
