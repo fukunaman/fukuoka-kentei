@@ -1,4 +1,4 @@
-import { TestResult, UserAnswer } from '../types';
+import type { TestResult, UserAnswer } from '../types';
 
 export const calculateScore = (
   answers: UserAnswer[],

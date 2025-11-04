@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TestData, UserAnswer } from '../types';
+import type { TestData, UserAnswer } from '../types';
 import QuestionCard from './QuestionCard';
 
 interface TestInterfaceProps {
