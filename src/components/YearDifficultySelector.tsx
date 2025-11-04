@@ -64,7 +64,7 @@ const YearDifficultySelector: React.FC<YearDifficultySelectorProps> = ({
       </div>
 
       <div className="disclaimer">
-        <p>※ このテストは個人で楽しむためのものです。公式の試験とは異なります。</p>
+        <p>※ このサイトは非公式の個人で楽しむためのものです。</p>
       </div>
 
       <footer className="data-source">
