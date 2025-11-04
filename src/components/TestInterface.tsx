@@ -20,12 +20,12 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
   const [showResult, setShowResult] = useState<boolean[]>(
     new Array(testData.questions.length).fill(false)
   );
-  const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
+  const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<number | null>(null);
 
   // コンポーネントのアンマウント時にタイマーをクリーンアップ
   useEffect(() => {
     return () => {
-      if (autoAdvanceTimer) {
+      if (autoAdvanceTimer !== null) {
         clearTimeout(autoAdvanceTimer);
       }
     };
@@ -45,7 +45,7 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
     setShowResult(newShowResult);
     
     // 既存のタイマーをクリア
-    if (autoAdvanceTimer) {
+    if (autoAdvanceTimer !== null) {
       clearTimeout(autoAdvanceTimer);
     }
     
@@ -61,7 +61,7 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
 
   const handleNextQuestion = () => {
     // 自動遷移タイマーをクリア
-    if (autoAdvanceTimer) {
+    if (autoAdvanceTimer !== null) {
       clearTimeout(autoAdvanceTimer);
       setAutoAdvanceTimer(null);
     }
@@ -73,7 +73,7 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
 
   const handlePreviousQuestion = () => {
     // 自動遷移タイマーをクリア
-    if (autoAdvanceTimer) {
+    if (autoAdvanceTimer !== null) {
       clearTimeout(autoAdvanceTimer);
       setAutoAdvanceTimer(null);
     }
@@ -154,7 +154,7 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
               key={index}
               onClick={() => {
                 // 自動遷移タイマーをクリア
-                if (autoAdvanceTimer) {
+                if (autoAdvanceTimer !== null) {
                   clearTimeout(autoAdvanceTimer);
                   setAutoAdvanceTimer(null);
                 }
