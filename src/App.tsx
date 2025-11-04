@@ -12,11 +12,11 @@ type AppState = 'menu' | 'test' | 'result';
 function App() {
   const [appState, setAppState] = useState<AppState>('menu');
   const [selectedYear, setSelectedYear] = useState('令和6年度');
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'初級' | '上級'>('初級');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'初級'>('初級');
   const [currentTestData, setCurrentTestData] = useState<TestData | null>(null);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
 
-  const getTestData = (year: string, difficulty: '初級' | '上級'): TestData | null => {
+  const getTestData = (year: string, difficulty: '初級'): TestData | null => {
     if (year === '令和6年度' && difficulty === '初級') {
       return testDataR6Shokyu as TestData;
     }
@@ -52,7 +52,7 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div className={`app ${appState === 'menu' ? 'menu-state' : ''}`}>
       {appState === 'menu' && (
         <YearDifficultySelector
           selectedYear={selectedYear}

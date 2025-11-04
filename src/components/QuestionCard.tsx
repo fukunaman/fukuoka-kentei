@@ -7,6 +7,7 @@ interface QuestionCardProps {
   onAnswerSelect: (answer: number) => void;
   questionNumber: number;
   totalQuestions: number;
+  showResult?: boolean;
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -15,6 +16,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   onAnswerSelect,
   questionNumber,
   totalQuestions,
+  showResult = false,
 }) => {
   return (
     <div className="question-card">
@@ -29,17 +31,45 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
       
       <div className="options">
-        {question.options.map((option, index) => (
-          <button
-            key={index}
-            className={`option-button ${selectedAnswer === index ? 'selected' : ''}`}
-            onClick={() => onAnswerSelect(index)}
-          >
-            <span className="option-number">{'①②③④'[index]}</span>
-            <span className="option-text">{option}</span>
-          </button>
-        ))}
+        {question.options.map((option, index) => {
+          let buttonClass = 'option-button';
+          if (selectedAnswer === index) {
+            buttonClass += ' selected';
+          }
+          if (showResult && selectedAnswer !== null) {
+            if (index === question.correctAnswer) {
+              buttonClass += ' correct-answer';
+            } else if (index === selectedAnswer && index !== question.correctAnswer) {
+              buttonClass += ' incorrect-answer';
+            }
+          }
+          
+          return (
+            <button
+              key={index}
+              className={buttonClass}
+              onClick={() => !showResult && onAnswerSelect(index)}
+              disabled={showResult}
+            >
+              <span className="option-number">{'①②③④'[index]}</span>
+              <span className="option-text">{option}</span>
+              {showResult && index === question.correctAnswer && (
+                <span className="result-icon correct">✓</span>
+              )}
+              {showResult && index === selectedAnswer && index !== question.correctAnswer && (
+                <span className="result-icon incorrect">✗</span>
+              )}
+            </button>
+          );
+        })}
       </div>
+      
+      {showResult && question.explanation && (
+        <div className="explanation">
+          <h4>解説</h4>
+          <p>{question.explanation}</p>
+        </div>
+      )}
     </div>
   );
 };

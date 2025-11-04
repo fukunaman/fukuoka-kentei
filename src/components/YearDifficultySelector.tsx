@@ -2,14 +2,14 @@ import React from 'react';
 
 interface YearDifficultySelectorProps {
   selectedYear: string;
-  selectedDifficulty: '初級' | '上級';
+  selectedDifficulty: '初級';
   onYearChange: (year: string) => void;
-  onDifficultyChange: (difficulty: '初級' | '上級') => void;
+  onDifficultyChange: (difficulty: '初級') => void;
   onStartTest: () => void;
 }
 
 const availableYears = ['令和6年度'];
-const difficulties: ('初級' | '上級')[] = ['初級', '上級'];
+const difficulties: ('初級')[] = ['初級'];
 
 const YearDifficultySelector: React.FC<YearDifficultySelectorProps> = ({
   selectedYear,
@@ -19,8 +19,10 @@ const YearDifficultySelector: React.FC<YearDifficultySelectorProps> = ({
   onStartTest,
 }) => {
   return (
-    <div className="year-difficulty-selector">
-      <h1>福岡検定オンラインテスト</h1>
+    <main className="year-difficulty-selector" role="main">
+      <header>
+        <h1>福岡検定オンラインテスト</h1>
+      </header>
       
       <div className="selection-container">
         <div className="selector-group">
@@ -39,12 +41,13 @@ const YearDifficultySelector: React.FC<YearDifficultySelectorProps> = ({
           </select>
         </div>
 
+
         <div className="selector-group">
           <label htmlFor="difficulty-select">難易度を選択してください</label>
           <select
             id="difficulty-select"
             value={selectedDifficulty}
-            onChange={(e) => onDifficultyChange(e.target.value as '初級' | '上級')}
+            onChange={(e) => onDifficultyChange(e.target.value as '初級')}
             className="selector"
           >
             {difficulties.map((difficulty) => (
@@ -60,16 +63,11 @@ const YearDifficultySelector: React.FC<YearDifficultySelectorProps> = ({
         </button>
       </div>
 
-      <div className="info">
-        <p>選択された設定:</p>
-        <ul>
-          <li>年度: {selectedYear}</li>
-          <li>難易度: {selectedDifficulty}</li>
-          <li>制限時間: 30分</li>
-          <li>問題数: 50問</li>
-        </ul>
-      </div>
-    </div>
+      <footer className="data-source">
+        <p>データ元: <a href="https://fukuokakentei.com/past/" target="_blank" rel="noopener noreferrer">福岡検定過去問題</a></p>
+        <p>開発: <a href="https://github.com/fukunaman/fukuoka-kentei" target="_blank" rel="noopener noreferrer">ふくなまん</a></p>
+      </footer>
+    </main>
   );
 };
 

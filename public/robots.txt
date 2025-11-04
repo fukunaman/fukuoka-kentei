@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# サイトマップの場所
+Sitemap: https://fukunaman.github.io/fukuoka-kentei/sitemap.xml
+
+# クロール遅延 (1秒)
+Crawl-delay: 1
+
+# 特定のページをブロック (該当する場合)
+# Disallow: /admin/
+# Disallow: /private/
+
+# 検索エンジンに優先的にクロールしてほしいページ
+# Allow: /
+# Allow: /test/
+# Allow: /result/

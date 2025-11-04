@@ -17,57 +17,82 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
   const [answers, setAnswers] = useState<(number | null)[]>(
     new Array(testData.questions.length).fill(null)
   );
-  const [timeRemaining, setTimeRemaining] = useState(testData.timeLimit * 60); // convert to seconds
-  const [startTime] = useState(Date.now());
+  const [showResult, setShowResult] = useState<boolean[]>(
+    new Array(testData.questions.length).fill(false)
+  );
+  const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
 
+  // コンポーネントのアンマウント時にタイマーをクリーンアップ
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          handleSubmit();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+    return () => {
+      if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+      }
+    };
+  }, [autoAdvanceTimer]);
 
   const handleAnswerSelect = (answer: number) => {
+    // 既に回答済みの場合は何もしない
+    if (showResult[currentQuestionIndex]) return;
+    
     const newAnswers = [...answers];
     newAnswers[currentQuestionIndex] = answer;
     setAnswers(newAnswers);
+    
+    // 即座に正誤を表示
+    const newShowResult = [...showResult];
+    newShowResult[currentQuestionIndex] = true;
+    setShowResult(newShowResult);
+    
+    // 既存のタイマーをクリア
+    if (autoAdvanceTimer) {
+      clearTimeout(autoAdvanceTimer);
+    }
+    
+    // 1秒後に自動で次の問題に遷移（最後の問題でない場合）
+    if (currentQuestionIndex < testData.questions.length - 1) {
+      const timer = setTimeout(() => {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setAutoAdvanceTimer(null);
+      }, 1000);
+      setAutoAdvanceTimer(timer);
+    }
   };
 
   const handleNextQuestion = () => {
+    // 自動遷移タイマーをクリア
+    if (autoAdvanceTimer) {
+      clearTimeout(autoAdvanceTimer);
+      setAutoAdvanceTimer(null);
+    }
+    
     if (currentQuestionIndex < testData.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
   const handlePreviousQuestion = () => {
+    // 自動遷移タイマーをクリア
+    if (autoAdvanceTimer) {
+      clearTimeout(autoAdvanceTimer);
+      setAutoAdvanceTimer(null);
+    }
+    
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
   const handleSubmit = () => {
-    const timeSpent = Math.round((Date.now() - startTime) / 60000); // convert to minutes
     const userAnswers: UserAnswer[] = answers.map((answer, index) => ({
       questionId: testData.questions[index].id,
       selectedAnswer: answer ?? -1,
       isCorrect: answer === testData.questions[index].correctAnswer,
     }));
     
-    onTestComplete(userAnswers, timeSpent);
+    onTestComplete(userAnswers, 0); // 時間は0に設定
   };
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const answeredQuestions = answers.filter(answer => answer !== null).length;
   const currentQuestion = testData.questions[currentQuestionIndex];
@@ -82,9 +107,6 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
           </button>
         </div>
         <div className="test-status">
-          <span className="time-remaining">
-            残り時間: {formatTime(timeRemaining)}
-          </span>
           <span className="progress">
             回答済み: {answeredQuestions} / {testData.questions.length}問
           </span>
@@ -98,6 +120,7 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
           onAnswerSelect={handleAnswerSelect}
           questionNumber={currentQuestionIndex + 1}
           totalQuestions={testData.questions.length}
+          showResult={showResult[currentQuestionIndex]}
         />
       </main>
 
@@ -129,7 +152,14 @@ const TestInterface: React.FC<TestInterfaceProps> = ({
           {testData.questions.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentQuestionIndex(index)}
+              onClick={() => {
+                // 自動遷移タイマーをクリア
+                if (autoAdvanceTimer) {
+                  clearTimeout(autoAdvanceTimer);
+                  setAutoAdvanceTimer(null);
+                }
+                setCurrentQuestionIndex(index);
+              }}
               className={`question-nav-button ${
                 index === currentQuestionIndex ? 'current' : ''
               } ${
