@@ -1,5 +1,5 @@
 import React from 'react';
-import { TestResult, TestData } from '../types';
+import type { TestResult, TestData } from '../types';
 
 interface ResultScreenProps {
   result: TestResult;
