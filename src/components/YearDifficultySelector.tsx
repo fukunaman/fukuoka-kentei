@@ -63,6 +63,10 @@ const YearDifficultySelector: React.FC<YearDifficultySelectorProps> = ({
         </button>
       </div>
 
+      <div className="disclaimer">
+        <p>※ このテストは個人で楽しむためのものです。公式の試験とは異なります。</p>
+      </div>
+
       <footer className="data-source">
         <p>データ元: <a href="https://fukuokakentei.com/past/" target="_blank" rel="noopener noreferrer">福岡検定過去問題</a></p>
         <p>開発: <a href="https://github.com/fukunaman/fukuoka-kentei" target="_blank" rel="noopener noreferrer">ふくなまん</a></p>

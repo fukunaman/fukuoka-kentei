@@ -52,6 +52,11 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
           </div>
         </div>
 
+        <div className="passing-score-info">
+          <h3>福岡検定の合格点</h3>
+          <p>福岡検定の合格点は、初級が70%、中級が60%、上級が80%です。</p>
+        </div>
+
         <div className="answer-review">
           <h3>解答一覧</h3>
           <div className="answer-grid">
